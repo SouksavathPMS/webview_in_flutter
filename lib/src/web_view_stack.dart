@@ -18,25 +18,27 @@ class _WebViewStackState extends State<WebViewStack> {
 
   @override
   void initState() {
-    widget.controller.setNavigationDelegate(
-      NavigationDelegate(
-        onPageStarted: (url) => setState(() => loadinPercentage = 0),
-        onProgress: (progress) => setState(() => loadinPercentage = progress),
-        onPageFinished: (url) => setState(() => loadinPercentage = 100),
-        onNavigationRequest: (request) {
-          final host = Uri.parse(request.url).host;
-          if (host.contains("youtube.com")) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Blocking navigation to $host"),
-              ),
-            );
-            return NavigationDecision.prevent;
-          }
-          return NavigationDecision.navigate;
-        },
-      ),
-    );
+    widget.controller
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (url) => setState(() => loadinPercentage = 0),
+          onProgress: (progress) => setState(() => loadinPercentage = progress),
+          onPageFinished: (url) => setState(() => loadinPercentage = 100),
+          onNavigationRequest: (request) {
+            final host = Uri.parse(request.url).host;
+            if (host.contains("youtube.com")) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Blocking navigation to $host"),
+                ),
+              );
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
     super.initState();
   }
 
