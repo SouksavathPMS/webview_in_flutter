@@ -4,6 +4,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 enum _MenuOption {
   navigationDelegate,
   userAgent,
+  javascriptChannel,
 }
 
 class Menu extends StatelessWidget {
@@ -26,6 +27,10 @@ class Menu extends StatelessWidget {
           value: _MenuOption.userAgent,
           child: Text("Show user-agent"),
         ),
+        const PopupMenuItem<_MenuOption>(
+          value: _MenuOption.javascriptChannel,
+          child: Text("Lookup IP Address"),
+        ),
       ],
       onSelected: (value) async {
         switch (value) {
@@ -38,6 +43,20 @@ class Menu extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text('$userAgent'),
             ));
+          case _MenuOption.javascriptChannel:
+            await controller.runJavaScript('''
+              var req = new XMLHttpRequest();
+              req.open('GET', "https://api.ipify.org/?format=json");
+              req.onload = function() {
+                if (req.status == 200) {
+                  let response = JSON.parse(req.responseText);
+                  SnackBar.postMessage("IP Address: " + response.ip);
+                } else {
+                  SnackBar.postMessage("Error: " + req.status);
+                }
+              }
+              req.send();
+            ''');
         }
       },
     );
