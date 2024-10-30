@@ -23,6 +23,18 @@ class _WebViewStackState extends State<WebViewStack> {
         onPageStarted: (url) => setState(() => loadinPercentage = 0),
         onProgress: (progress) => setState(() => loadinPercentage = progress),
         onPageFinished: (url) => setState(() => loadinPercentage = 100),
+        onNavigationRequest: (request) {
+          final host = Uri.parse(request.url).host;
+          if (host.contains("youtube.com")) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Blocking navigation to $host"),
+              ),
+            );
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
       ),
     );
     super.initState();
