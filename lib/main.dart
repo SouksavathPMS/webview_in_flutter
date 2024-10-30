@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_in_flutter/src/navigation_controller.dart';
+import 'package:webview_in_flutter/src/menu.dart';
+import 'package:webview_in_flutter/src/navigation_controls.dart';
 import 'package:webview_in_flutter/src/web_view_stack.dart';
 
 void main() {
@@ -49,6 +50,7 @@ class _WebViewAppState extends State<WebViewApp> {
         centerTitle: false,
         actions: [
           NavigationControls(controller: _webViewController),
+          Menu(controller: _webViewController),
         ],
       ),
       body: WebViewStack(controller: _webViewController),
