@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_in_flutter/src/navigation_controller.dart';
 import 'package:webview_in_flutter/src/web_view_stack.dart';
 
 void main() {
@@ -22,16 +23,35 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class WebViewApp extends StatelessWidget {
+class WebViewApp extends StatefulWidget {
   const WebViewApp({super.key});
+
+  @override
+  State<WebViewApp> createState() => _WebViewAppState();
+}
+
+class _WebViewAppState extends State<WebViewApp> {
+  late WebViewController _webViewController;
+  @override
+  void initState() {
+    _webViewController = WebViewController()
+      ..loadRequest(
+        Uri.parse("https://flutter.dev"),
+      );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Flutter Webview"),
+        centerTitle: false,
+        actions: [
+          NavigationControls(controller: _webViewController),
+        ],
       ),
-      body: const WebViewStack(),
+      body: WebViewStack(controller: _webViewController),
     );
   }
 }
